@@ -37,3 +37,8 @@ A decoded response list.
 Retrieves processing metadata for an OpenET raster collection at a point or
 polygon.
 }
+\examples{
+\dontrun{
+openet_metadata(c(-121.36322, 38.87626))
+}
+}

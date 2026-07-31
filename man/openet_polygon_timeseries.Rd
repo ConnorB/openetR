@@ -51,3 +51,11 @@ Requests raster data aggregated over a simple polygon. Supply a flattened
 longitude/latitude vector, e.g. \code{c(-121, 44, -121, 45, -120, 45, -120, 44)}.
 Daily requests are limited to ten years by the OpenET API.
 }
+\examples{
+\dontrun{
+openet_polygon_timeseries(
+  geometry = c(-121.01, 44.24, -121.01, 44.25, -121.00, 44.25),
+  start = "2020-01-01", end = "2020-12-31"
+)
+}
+}

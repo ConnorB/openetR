@@ -6,6 +6,14 @@
       Error in `openet_api_key()`:
       ! An OpenET API key is required. Set the OPENET_API_KEY environment variable or supply `key`.
 
+---
+
+    Code
+      openet_api_key("   ")
+    Condition
+      Error in `openet_api_key()`:
+      ! An OpenET API key is required. Set the OPENET_API_KEY environment variable or supply `key`.
+
 # point requests validate coordinates before making a request
 
     Code
@@ -29,4 +37,21 @@
     Condition
       Error in `.timeseries_body()`:
       ! `start` must be on or before `end`.
+
+# request options are validated before making a request
+
+    Code
+      openet_point_timeseries(-121, 44, "2020-01-01", "2020-12-31", overpass = "no",
+        key = "abc")
+    Condition
+      Error in `.check_flag()`:
+      ! `overpass` must be `TRUE` or `FALSE`.
+
+---
+
+    Code
+      openet_metadata(c(-121, 44), version = Inf, key = "abc")
+    Condition
+      Error in `.check_collection_args()`:
+      ! `version` must be a single finite number.
 

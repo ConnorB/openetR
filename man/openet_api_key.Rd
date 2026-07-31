@@ -17,3 +17,6 @@ Retrieves an API key from \code{OPENET_API_KEY}, unless \code{key} is supplied.
 Create a key in the OpenET account dashboard (<https://account.etdata.org/
 settings/api>). Keys are sent only in the request's \code{Authorization} header.
 }
+\examples{
+openet_api_key("your-api-key")
+}

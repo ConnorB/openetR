@@ -48,3 +48,11 @@ response object.
 Requests raster data summarized at one longitude/latitude point. Daily
 requests are limited to ten years by the OpenET API.
 }
+\examples{
+\dontrun{
+openet_point_timeseries(
+  longitude = -121.36322, latitude = 38.87626,
+  start = "2020-01-01", end = "2020-12-31"
+)
+}
+}

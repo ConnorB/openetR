@@ -6,9 +6,16 @@
 #'
 #' @param key An OpenET API key. By default, read from `OPENET_API_KEY`.
 #' @return A single API key string.
+#' @examples
+#' openet_api_key("your-api-key")
 #' @export
 openet_api_key <- function(key = Sys.getenv("OPENET_API_KEY")) {
-  if (!is.character(key) || length(key) != 1L || is.na(key) || !nzchar(key)) {
+  if (
+    !is.character(key) ||
+      length(key) != 1L ||
+      is.na(key) ||
+      !nzchar(trimws(key))
+  ) {
     rlang::abort(
       "An OpenET API key is required. Set the OPENET_API_KEY environment variable or supply `key`."
     )
@@ -33,12 +40,28 @@ openet_api_key <- function(key = Sys.getenv("OPENET_API_KEY")) {
 #' @param key API key, by default from `OPENET_API_KEY`.
 #' @return A tibble when OpenET returns row-like JSON; otherwise the decoded
 #'   response object.
+#' @examples
+#' \dontrun{
+#' openet_point_timeseries(
+#'   longitude = -121.36322, latitude = 38.87626,
+#'   start = "2020-01-01", end = "2020-12-31"
+#' )
+#' }
 #' @export
 openet_point_timeseries <- function(
-    longitude, latitude, start, end, interval = c("monthly", "daily"),
-    model = "ensemble", variable = "et", reference_et = "gridmet",
-    units = c("mm", "in"), version = 2.1, overpass = FALSE,
-    key = Sys.getenv("OPENET_API_KEY")) {
+  longitude,
+  latitude,
+  start,
+  end,
+  interval = c("monthly", "daily"),
+  model = "ensemble",
+  variable = "et",
+  reference_et = "gridmet",
+  units = c("mm", "in"),
+  version = 2.1,
+  overpass = FALSE,
+  key = Sys.getenv("OPENET_API_KEY")
+) {
   rlang::check_installed("httr2")
   interval <- match.arg(interval)
   units <- match.arg(units)
@@ -46,7 +69,14 @@ openet_point_timeseries <- function(
   .check_coordinate(latitude, "latitude", -90, 90)
 
   body <- .timeseries_body(
-    start, end, interval, model, variable, reference_et, units, version,
+    start,
+    end,
+    interval,
+    model,
+    variable,
+    reference_et,
+    units,
+    version,
     overpass
   )
   body$geometry <- c(longitude, latitude)
@@ -64,13 +94,28 @@ openet_point_timeseries <- function(
 #' @param reducer Pixel aggregation method.
 #' @return A tibble when OpenET returns row-like JSON; otherwise the decoded
 #'   response object.
+#' @examples
+#' \dontrun{
+#' openet_polygon_timeseries(
+#'   geometry = c(-121.01, 44.24, -121.01, 44.25, -121.00, 44.25),
+#'   start = "2020-01-01", end = "2020-12-31"
+#' )
+#' }
 #' @export
 openet_polygon_timeseries <- function(
-    geometry, start, end, interval = c("monthly", "daily"),
-    model = "ensemble", variable = "et", reference_et = "gridmet",
-    reducer = c("mean", "sum", "min", "max", "median", "mode"),
-    units = c("mm", "in"), version = 2.1, overpass = FALSE,
-    key = Sys.getenv("OPENET_API_KEY")) {
+  geometry,
+  start,
+  end,
+  interval = c("monthly", "daily"),
+  model = "ensemble",
+  variable = "et",
+  reference_et = "gridmet",
+  reducer = c("mean", "sum", "min", "max", "median", "mode"),
+  units = c("mm", "in"),
+  version = 2.1,
+  overpass = FALSE,
+  key = Sys.getenv("OPENET_API_KEY")
+) {
   rlang::check_installed("httr2")
   interval <- match.arg(interval)
   reducer <- match.arg(reducer)
@@ -78,7 +123,14 @@ openet_polygon_timeseries <- function(
   .check_polygon(geometry)
 
   body <- .timeseries_body(
-    start, end, interval, model, variable, reference_et, units, version,
+    start,
+    end,
+    interval,
+    model,
+    variable,
+    reference_et,
+    units,
+    version,
     overpass
   )
   body$geometry <- geometry
@@ -100,13 +152,23 @@ openet_polygon_timeseries <- function(
 #' @param version OpenET image collection version.
 #' @param key API key, by default from `OPENET_API_KEY`.
 #' @return A decoded response list.
+#' @examples
+#' \dontrun{
+#' openet_metadata(c(-121.36322, 38.87626))
+#' }
 #' @export
 openet_metadata <- function(
-    geometry, interval = c("monthly", "daily"), model = "ensemble",
-    variable = "et", reference_et = "gridmet", version = 2.1,
-    key = Sys.getenv("OPENET_API_KEY")) {
+  geometry,
+  interval = c("monthly", "daily"),
+  model = "ensemble",
+  variable = "et",
+  reference_et = "gridmet",
+  version = 2.1,
+  key = Sys.getenv("OPENET_API_KEY")
+) {
   rlang::check_installed("httr2")
   interval <- match.arg(interval)
+  .check_collection_args(model, variable, reference_et, version)
   if (length(geometry) == 2L) {
     .check_coordinate(geometry[[1]], "longitude", -180, 180)
     .check_coordinate(geometry[[2]], "latitude", -90, 90)
@@ -116,23 +178,44 @@ openet_metadata <- function(
   .openet_post(
     "raster/metadata",
     list(
-      interval = interval, geometry = geometry, model = model,
-      variable = variable, reference_et = reference_et, version = version
+      interval = interval,
+      geometry = geometry,
+      model = model,
+      variable = variable,
+      reference_et = reference_et,
+      version = version
     ),
     key
   )
 }
 
 .timeseries_body <- function(
-    start, end, interval, model, variable, reference_et, units, version,
-    overpass) {
+  start,
+  end,
+  interval,
+  model,
+  variable,
+  reference_et,
+  units,
+  version,
+  overpass
+) {
   start <- .date_string(start, "start")
   end <- .date_string(end, "end")
-  if (start > end) rlang::abort("`start` must be on or before `end`.")
+  if (start > end) {
+    rlang::abort("`start` must be on or before `end`.")
+  }
+  .check_collection_args(model, variable, reference_et, version)
+  .check_flag(overpass, "overpass")
   list(
-    date_range = c(start, end), interval = interval, overpass = overpass,
-    model = tolower(model), variable = tolower(variable),
-    reference_et = tolower(reference_et), version = version, units = units,
+    date_range = c(start, end),
+    interval = interval,
+    overpass = overpass,
+    model = tolower(model),
+    variable = tolower(variable),
+    reference_et = tolower(reference_et),
+    version = version,
+    units = units,
     file_format = "json"
   )
 }
@@ -147,7 +230,9 @@ openet_metadata <- function(
 }
 
 .as_tibble <- function(x) {
-  if (is.data.frame(x)) return(tibble::as_tibble(x))
+  if (is.data.frame(x)) {
+    return(tibble::as_tibble(x))
+  }
   if (is.list(x) && length(x) && all(vapply(x, is.list, logical(1)))) {
     return(tibble::as_tibble(x))
   }
@@ -164,18 +249,61 @@ openet_metadata <- function(
 
 .check_coordinate <- function(x, name, lower, upper) {
   if (!is.numeric(x) || length(x) != 1L || is.na(x) || x < lower || x > upper) {
-    rlang::abort(paste0("`", name, "` must be between ", lower, " and ", upper, "."))
+    rlang::abort(paste0(
+      "`",
+      name,
+      "` must be between ",
+      lower,
+      " and ",
+      upper,
+      "."
+    ))
   }
 }
 
 .check_polygon <- function(geometry) {
-  if (!is.numeric(geometry) || length(geometry) < 6L || length(geometry) %% 2L) {
-    rlang::abort("`geometry` must contain at least three longitude/latitude pairs.")
+  if (
+    !is.numeric(geometry) || length(geometry) < 6L || length(geometry) %% 2L
+  ) {
+    rlang::abort(
+      "`geometry` must contain at least three longitude/latitude pairs."
+    )
   }
-  if (anyNA(geometry)) rlang::abort("`geometry` cannot contain missing values.")
+  if (anyNA(geometry)) {
+    rlang::abort("`geometry` cannot contain missing values.")
+  }
   longitude <- geometry[seq(1L, length(geometry), by = 2L)]
   latitude <- geometry[seq(2L, length(geometry), by = 2L)]
-  if (any(longitude < -180 | longitude > 180) || any(latitude < -90 | latitude > 90)) {
+  if (
+    any(longitude < -180 | longitude > 180) ||
+      any(latitude < -90 | latitude > 90)
+  ) {
     rlang::abort("`geometry` contains coordinates outside WGS84 bounds.")
+  }
+}
+
+.check_collection_args <- function(model, variable, reference_et, version) {
+  .check_string(model, "model")
+  .check_string(variable, "variable")
+  .check_string(reference_et, "reference_et")
+  if (
+    !is.numeric(version) ||
+      length(version) != 1L ||
+      is.na(version) ||
+      !is.finite(version)
+  ) {
+    rlang::abort("`version` must be a single finite number.")
+  }
+}
+
+.check_string <- function(x, name) {
+  if (!is.character(x) || length(x) != 1L || is.na(x) || !nzchar(trimws(x))) {
+    rlang::abort(paste0("`", name, "` must be a single non-empty string."))
+  }
+}
+
+.check_flag <- function(x, name) {
+  if (!is.logical(x) || length(x) != 1L || is.na(x)) {
+    rlang::abort(paste0("`", name, "` must be `TRUE` or `FALSE`."))
   }
 }
