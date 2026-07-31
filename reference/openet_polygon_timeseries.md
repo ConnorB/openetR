@@ -3,7 +3,9 @@
 Requests raster data aggregated over a simple polygon. Supply a
 flattened longitude/latitude vector, e.g.
 `c(-121, 44, -121, 45, -120, 45, -120, 44)`. Daily requests are limited
-to ten years by the OpenET API.
+to ten years by the OpenET API. See the [polygon workflow
+article](https://connorb.github.io/openetR/articles/polygon-workflows.html)
+for guidance on geometry and reducers.
 
 ## Usage
 

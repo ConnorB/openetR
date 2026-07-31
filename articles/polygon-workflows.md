@@ -1,22 +1,26 @@
 # Work with OpenET polygons
 
+Use
+[`openet_polygon_timeseries()`](https://connorb.github.io/openetR/reference/openet_polygon_timeseries.md)
+to summarize an OpenET raster collection for a simple polygon.
+Coordinates must use WGS84 (EPSG:4326) and are supplied as alternating
+longitude/latitude values.
+
+Code
+
 ``` r
 
 library(openetR)
 ```
 
-Use
-[`openet_polygon_timeseries()`](https://connorb.github.io/openetR/reference/openet_polygon_timeseries.md)
-to summarize an OpenET raster collection for a simple polygon.
-Coordinates must be WGS84 and are supplied as alternating
-longitude/latitude values.
-
 ## Define a polygon
 
-This rectangle is shown without repeating its first coordinate because
-OpenET accepts a simple sequence of vertex pairs. Use a closed ring when
-your source data requires it; `openetR` passes the coordinates to OpenET
+This rectangle does not repeat its first coordinate because OpenET
+accepts a simple sequence of vertex pairs. Use a closed ring only if
+your source data requires it; `openetR` passes coordinates to OpenET
 unchanged.
+
+Code
 
 ``` r
 
@@ -31,8 +35,10 @@ field <- c(
 ## Request an aggregated time series
 
 Choose the pixel aggregation with `reducer`. `"mean"` is appropriate for
-an average depth across an area, while `"sum"` is useful for totals only
-when its units and interpretation match the selected OpenET variable.
+an average depth across an area. Use `"sum"` only when its units and
+interpretation are appropriate for the selected variable.
+
+Code
 
 ``` r
 
@@ -49,11 +55,16 @@ field_et <- openet_polygon_timeseries(
 )
 ```
 
-## Validate inputs before a request
+## Prevent common input errors
 
-`openetR` validates coordinate bounds, requires an even number of
-coordinate values, and checks that the requested date range is ordered.
-Those checks catch common errors locally, before spending an API
-request. For larger collections of fields, use OpenET’s multipolygon or
-export endpoints directly until a high-level client is added to
-`openetR`.
+`openetR` checks coordinate bounds, requires an even number of
+coordinate values, and verifies that dates are ordered before making a
+request.
+
+> **Start with metadata**
+>
+> Call `openet_metadata(field)` before a long analysis to confirm the
+> selected model, variable, reference ET source, and collection version.
+
+For larger collections of fields, use OpenET’s multipolygon or export
+endpoints directly until a high-level client is added to `openetR`.

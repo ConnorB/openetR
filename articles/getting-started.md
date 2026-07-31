@@ -1,36 +1,46 @@
 # Get started with openetR
 
+`openetR` provides a compact interface to the [OpenET raster
+API](https://openet.gitbook.io/docs/reference/api-reference/raster).
+Retrieve evapotranspiration (ET) time series for a point or polygon,
+then use metadata to understand the selected raster collection.
+
+Code
+
 ``` r
 
 library(openetR)
 ```
 
-`openetR` provides a small, consistent interface to OpenET’s raster API.
-It uses [httr2](https://httr2.r-lib.org/) for HTTP requests and returns
-decoded JSON responses without requiring a web browser or an Earth
-Engine client.
-
 ## Authenticate
 
 Create an API key in the [OpenET account
-dashboard](https://account.etdata.org/%20settings/api), then set it as
-an environment variable. This keeps credentials out of scripts, Git
-history, and rendered reports.
+dashboard](https://account.etdata.org/settings/api). Store it in an
+environment variable so it stays out of scripts, Git history, and
+rendered reports.
+
+Code
 
 ``` r
 
 Sys.setenv(OPENET_API_KEY = "your-api-key")
 ```
 
-The request functions read this variable automatically. For temporary or
-programmatic credentials, pass `key` directly instead.
+All request functions read this variable automatically. For temporary or
+programmatic credentials, supply `key` directly instead.
+
+> **Keep keys private**
+>
+> Do not commit an API key to a repository. Prefer environment variables
+> or a secret-management system for deployed work.
 
 ## Retrieve a point time series
 
 OpenET uses WGS84 longitude and latitude coordinates. The following
-request retrieves monthly ensemble ET at a point in California. API
-requests are not run while building this vignette, so the example
-remains reproducible without credentials.
+request retrieves monthly ensemble ET at a point in California. It is
+shown but not run so this article can build without credentials.
+
+Code
 
 ``` r
 
@@ -47,17 +57,17 @@ et <- openet_point_timeseries(
 )
 ```
 
-Use `interval = "daily"` for daily data. OpenET currently limits daily
-point and polygon requests to ten years. Available model, variable, and
-reference ET values are documented by
-[OpenET](https://openet.gitbook.io/docs/reference/api-reference).
+Use `interval = "daily"` for daily values. Daily point and polygon
+requests are limited to ten years by OpenET. See the API documentation
+for supported models, variables, reference ET sources, and quotas.
 
 ## Inspect collection metadata
 
 Use
 [`openet_metadata()`](https://connorb.github.io/openetR/reference/openet_metadata.md)
-to inspect the processing metadata for a location and collection before
-interpreting a result.
+to inspect a collection at a location before interpreting a result.
+
+Code
 
 ``` r
 
@@ -67,3 +77,6 @@ metadata <- openet_metadata(
   variable = "et"
 )
 ```
+
+For area summaries, continue to the [polygon
+workflow](https://connorb.github.io/openetR/articles/polygon-workflows.md).

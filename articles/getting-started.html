@@ -10,7 +10,9 @@
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Get started with openetR">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="getting-started_files/libs/quarto-html/popper.min.js"></script><script src="getting-started_files/libs/quarto-html/tippy.umd.min.js"></script><link href="getting-started_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="getting-started_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Get started with openetR">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -49,48 +51,50 @@
 
 
   </div>
-</nav><div class="container template-article">
-
-
-
-
+</nav><div class="container template-quarto">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Get started with openetR</h1>
-            
-      
-      <small class="dont-index">Source: <a href="https://github.com/ConnorB/openetR/blob/main/vignettes/getting-started.Rmd" class="external-link"><code>vignettes/getting-started.Rmd</code></a></small>
-      <div class="d-none name"><code>getting-started.Rmd</code></div>
+
+
+
+
+      <small class="dont-index">Source: <a href="https://github.com/ConnorB/openetR/blob/main/vignettes/getting-started.qmd" class="external-link"><code>vignettes/getting-started.qmd</code></a></small>
+      <div class="d-none name"><code></code></div>
     </div>
 
-    
-    
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+
+
+
+
+
+    <p><code>openetR</code> provides a compact interface to the <a href="https://openet.gitbook.io/docs/reference/api-reference/raster" class="external-link">OpenET raster API</a>. Retrieve evapotranspiration (ET) time series for a point or polygon, then use metadata to understand the selected raster collection.</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://connorb.github.io/openetR/">openetR</a></span><span class="op">)</span></span></code></pre></div>
-<p><code>openetR</code> provides a small, consistent interface to
-OpenET’s raster API. It uses <a href="https://httr2.r-lib.org/" class="external-link">httr2</a> for HTTP requests and returns
-decoded JSON responses without requiring a web browser or an Earth
-Engine client.</p>
-<div class="section level2">
-<h2 id="authenticate">Authenticate<a class="anchor" aria-label="anchor" href="#authenticate"></a>
-</h2>
-<p>Create an API key in the <a href="https://account.etdata.org/%20settings/api" class="external-link">OpenET account
-dashboard</a>, then set it as an environment variable. This keeps
-credentials out of scripts, Git history, and rendered reports.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>OPENET_API_KEY <span class="op">=</span> <span class="st">"your-api-key"</span><span class="op">)</span></span></code></pre></div>
-<p>The request functions read this variable automatically. For temporary
-or programmatic credentials, pass <code>key</code> directly instead.</p>
+</details>
 </div>
-<div class="section level2">
-<h2 id="retrieve-a-point-time-series">Retrieve a point time series<a class="anchor" aria-label="anchor" href="#retrieve-a-point-time-series"></a>
+<section class="level2"><h2 id="sec-authenticate">Authenticate<a class="anchor" aria-label="anchor" href="#sec-authenticate"></a>
 </h2>
-<p>OpenET uses WGS84 longitude and latitude coordinates. The following
-request retrieves monthly ensemble ET at a point in California. API
-requests are not run while building this vignette, so the example
-remains reproducible without credentials.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p>Create an API key in the <a href="https://account.etdata.org/settings/api" class="external-link">OpenET account dashboard</a>. Store it in an environment variable so it stays out of scripts, Git history, and rendered reports.</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>OPENET_API_KEY <span class="op">=</span> <span class="st">"your-api-key"</span><span class="op">)</span></span></code></pre></div>
+</details>
+</div>
+<p>All request functions read this variable automatically. For temporary or programmatic credentials, supply <code>key</code> directly instead.</p>
+<div>
+<blockquote>
+<p><strong>Keep keys private</strong></p>
+<p>Do not commit an API key to a repository. Prefer environment variables or a secret-management system for deployed work.</p>
+</blockquote>
+</div>
+</section><section class="level2"><h2 id="sec-point">Retrieve a point time series<a class="anchor" aria-label="anchor" href="#sec-point"></a>
+</h2>
+<p>OpenET uses WGS84 longitude and latitude coordinates. The following request retrieves monthly ensemble ET at a point in California. It is shown but not run so this article can build without credentials.</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">et</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/openet_point_timeseries.html">openet_point_timeseries</a></span><span class="op">(</span></span>
 <span>  longitude <span class="op">=</span> <span class="op">-</span><span class="fl">121.36322</span>,</span>
 <span>  latitude <span class="op">=</span> <span class="fl">38.87626</span>,</span>
@@ -102,26 +106,108 @@ remains reproducible without credentials.</p>
 <span>  reference_et <span class="op">=</span> <span class="st">"gridmet"</span>,</span>
 <span>  units <span class="op">=</span> <span class="st">"mm"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Use <code>interval = "daily"</code> for daily data. OpenET currently
-limits daily point and polygon requests to ten years. Available model,
-variable, and reference ET values are documented by <a href="https://openet.gitbook.io/docs/reference/api-reference" class="external-link">OpenET</a>.</p>
+</details>
 </div>
-<div class="section level2">
-<h2 id="inspect-collection-metadata">Inspect collection metadata<a class="anchor" aria-label="anchor" href="#inspect-collection-metadata"></a>
+<p>Use <code>interval = "daily"</code> for daily values. Daily point and polygon requests are limited to ten years by OpenET. See the API documentation for supported models, variables, reference ET sources, and quotas.</p>
+</section><section class="level2"><h2 id="sec-metadata">Inspect collection metadata<a class="anchor" aria-label="anchor" href="#sec-metadata"></a>
 </h2>
-<p>Use <code><a href="../reference/openet_metadata.html">openet_metadata()</a></code> to inspect the processing metadata
-for a location and collection before interpreting a result.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p>Use <code><a href="../reference/openet_metadata.html">openet_metadata()</a></code> to inspect a collection at a location before interpreting a result.</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/openet_metadata.html">openet_metadata</a></span><span class="op">(</span></span>
 <span>  geometry <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">121.36322</span>, <span class="fl">38.87626</span><span class="op">)</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"ensemble"</span>,</span>
 <span>  variable <span class="op">=</span> <span class="st">"et"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+</details>
 </div>
-  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+<p>For area summaries, continue to the <a href="polygon-workflows.html">polygon workflow</a>.</p>
+</section><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'light-border',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config);
+    }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script></main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
-
 
 
     <footer><div class="pkgdown-footer-left">

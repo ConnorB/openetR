@@ -1,7 +1,10 @@
 # Retrieve an OpenET point time series
 
 Requests raster data summarized at one longitude/latitude point. Daily
-requests are limited to ten years by the OpenET API.
+requests are limited to ten years by the OpenET API. See the
+[getting-started
+article](https://connorb.github.io/openetR/articles/getting-started.html)
+for a complete example.
 
 ## Usage
 

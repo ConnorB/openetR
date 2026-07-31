@@ -1,7 +1,8 @@
 # Retrieve OpenET raster metadata
 
 Retrieves processing metadata for an OpenET raster collection at a point
-or polygon.
+or polygon. Use this to confirm a collection's processing details before
+interpreting a time series.
 
 ## Usage
 
