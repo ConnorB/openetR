@@ -1,0 +1,75 @@
+---
+title: "Work with OpenET polygons"
+format:
+  html:
+    toc: true
+    code-fold: true
+execute:
+  echo: true
+  warning: false
+  message: false
+vignette: >
+  %\VignetteIndexEntry{Work with OpenET polygons}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+Use `openet_polygon_timeseries()` to summarize an OpenET raster collection for
+a simple polygon. Coordinates must use WGS84 (EPSG:4326) and are supplied as
+alternating longitude/latitude values.
+
+```{r}
+#| label: load-openetr
+library(openetR)
+```
+
+## Define a polygon {#sec-geometry}
+
+This rectangle does not repeat its first coordinate because OpenET accepts a
+simple sequence of vertex pairs. Use a closed ring only if your source data
+requires it; `openetR` passes coordinates to OpenET unchanged.
+
+```{r}
+field <- c(
+  -121.00747, 44.24420,
+  -121.00747, 44.24742,
+  -121.00295, 44.24742,
+  -121.00295, 44.24422
+)
+```
+
+## Request an aggregated time series {#sec-request}
+
+Choose the pixel aggregation with `reducer`. `"mean"` is appropriate for an
+average depth across an area. Use `"sum"` only when its units and
+interpretation are appropriate for the selected variable.
+
+```{r}
+#| eval: false
+field_et <- openet_polygon_timeseries(
+  geometry = field,
+  start = "2021-01-01",
+  end = "2021-12-31",
+  interval = "monthly",
+  model = "ensemble",
+  variable = "et",
+  reference_et = "gridmet",
+  reducer = "mean",
+  units = "mm"
+)
+```
+
+## Prevent common input errors {#sec-validation}
+
+`openetR` checks coordinate bounds, requires an even number of coordinate
+values, and verifies that dates are ordered before making a request.
+
+::: {.callout-tip}
+## Start with metadata
+
+Call `openet_metadata(field)` before a long analysis to confirm the selected
+model, variable, reference ET source, and collection version.
+:::
+
+For larger collections of fields, use OpenET's multipolygon or export endpoints
+directly until a high-level client is added to `openetR`.

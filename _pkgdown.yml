@@ -1,6 +1,8 @@
 url: https://connorb.github.io/openetR/
 template:
   bootstrap: 5
+  bslib:
+    primary: "#2c6e49"
 reference:
 - title: Authentication
   contents: openet_api_key
@@ -15,4 +17,3 @@ articles:
   contents:
   - getting-started
   - polygon-workflows
-

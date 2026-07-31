@@ -4,7 +4,8 @@
       openet_api_key("")
     Condition
       Error in `openet_api_key()`:
-      ! An OpenET API key is required. Set the OPENET_API_KEY environment variable or supply `key`.
+      ! An OpenET API key is required.
+      i Set `OPENET_API_KEY` or supply `key`.
 
 ---
 
@@ -12,7 +13,8 @@
       openet_api_key("   ")
     Condition
       Error in `openet_api_key()`:
-      ! An OpenET API key is required. Set the OPENET_API_KEY environment variable or supply `key`.
+      ! An OpenET API key is required.
+      i Set `OPENET_API_KEY` or supply `key`.
 
 # point requests validate coordinates before making a request
 
