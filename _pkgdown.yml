@@ -1,0 +1,20 @@
+url: https://connorb.github.io/openetR/
+template:
+  bootstrap: 5
+
+reference:
+  - title: Authentication
+    contents:
+      - openet_api_key
+  - title: Raster data
+    contents:
+      - openet_point_timeseries
+      - openet_polygon_timeseries
+      - openet_metadata
+
+articles:
+  - title: Get started
+    navbar: ~
+    contents:
+      - getting-started
+      - polygon-workflows

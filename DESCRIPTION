@@ -1,0 +1,25 @@
+Package: openetR
+Title: Access OpenET Evapotranspiration Data
+Version: 0.0.0.9000
+Authors@R:
+    person("Connor", "Brown", , "ConnorBrown1996@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-9680-8930"))
+Description: A tidy, minimal client for the OpenET API. Retrieve raster
+    evapotranspiration time series for points and polygons, and inspect
+    metadata for OpenET raster collections.
+License: AGPL (>= 3) + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+URL: https://connorb.github.io/openetR/, https://github.com/ConnorB/openetR
+BugReports: https://github.com/ConnorB/openetR/issues
+Imports:
+    httr2,
+    rlang,
+    tibble
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0.9000
+VignetteBuilder: knitr
