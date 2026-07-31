@@ -1,0 +1,59 @@
+# Work with OpenET polygons
+
+``` r
+
+library(openetR)
+```
+
+Use
+[`openet_polygon_timeseries()`](https://connorb.github.io/openetR/reference/openet_polygon_timeseries.md)
+to summarize an OpenET raster collection for a simple polygon.
+Coordinates must be WGS84 and are supplied as alternating
+longitude/latitude values.
+
+## Define a polygon
+
+This rectangle is shown without repeating its first coordinate because
+OpenET accepts a simple sequence of vertex pairs. Use a closed ring when
+your source data requires it; `openetR` passes the coordinates to OpenET
+unchanged.
+
+``` r
+
+field <- c(
+  -121.00747, 44.24420,
+  -121.00747, 44.24742,
+  -121.00295, 44.24742,
+  -121.00295, 44.24422
+)
+```
+
+## Request an aggregated time series
+
+Choose the pixel aggregation with `reducer`. `"mean"` is appropriate for
+an average depth across an area, while `"sum"` is useful for totals only
+when its units and interpretation match the selected OpenET variable.
+
+``` r
+
+field_et <- openet_polygon_timeseries(
+  geometry = field,
+  start = "2021-01-01",
+  end = "2021-12-31",
+  interval = "monthly",
+  model = "ensemble",
+  variable = "et",
+  reference_et = "gridmet",
+  reducer = "mean",
+  units = "mm"
+)
+```
+
+## Validate inputs before a request
+
+`openetR` validates coordinate bounds, requires an even number of
+coordinate values, and checks that the requested date range is ordered.
+Those checks catch common errors locally, before spending an API
+request. For larger collections of fields, use OpenET’s multipolygon or
+export endpoints directly until a high-level client is added to
+`openetR`.
